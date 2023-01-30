@@ -619,6 +619,14 @@ target_include_directories(cvo_irls_pcd PUBLIC
         $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include/${PROJECT_NAME}-${${PROJECT_NAME}_VERSION}> )
 target_link_libraries(cvo_irls_pcd cvo_gpu_img_lib  cvo_utils_lib boost_filesystem boost_system)
 
+add_executable(cvo_global_pcr ${PROJECT_SOURCE_DIR}/src/experiments/main_global_pcr.cpp)
+target_include_directories(cvo_global_pcr PUBLIC
+	#$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}> 
+	#$<BUILD_INTERFACE:${UnifiedCvo_BINARY_DIR}/include>
+        "$<BUILD_INTERFACE:${CVO_INCLUDE_DIRS}>"                
+        $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include/${PROJECT_NAME}-${${PROJECT_NAME}_VERSION}> )
+target_link_libraries(cvo_global_pcr cvo_gpu_img_lib  cvo_utils_lib boost_filesystem boost_system)
+
 
 add_executable(cvo_global_pcr ${PROJECT_SOURCE_DIR}/src/experiments/main_global_pcr.cpp)
 target_include_directories(cvo_global_pcr PUBLIC

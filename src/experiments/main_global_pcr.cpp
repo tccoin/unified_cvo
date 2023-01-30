@@ -128,7 +128,22 @@ void read_pose_file(
 
 void write_transformed_pc(std::vector<cvo::CvoFrame::Ptr> &frames,
                           std::string &fname) {
-  pcl::PointCloud<pcl::PointXYZRGB> pc_all;
+  // pcl::PointCloud<pcl::PointXYZRGB> pc_all;
+  // for (auto ptr : frames) {
+  //   cvo::CvoPointCloud new_pc;
+  //   Eigen::Matrix4d pose = Eigen::Matrix4d::Identity();
+  //   pose.block<3, 4>(0, 0) = Eigen::Map<cvo::Mat34d_row>(ptr->pose_vec);
+
+  //   Eigen::Matrix4f pose_f = pose.cast<float>();
+  //   cvo::CvoPointCloud::transform(pose_f, *ptr->points, new_pc);
+
+  //   pcl::PointCloud<pcl::PointXYZRGB> pc_curr;
+  //   new_pc.export_to_pcd(pc_curr);
+
+  //   pc_all += pc_curr;
+  // }
+  // pcl::io::savePCDFileASCII(fname, pc_all);
+  cvo::CvoPointCloud pc_all;
   for (auto ptr : frames) {
     cvo::CvoPointCloud new_pc;
     Eigen::Matrix4d pose = Eigen::Matrix4d::Identity();
@@ -137,12 +152,9 @@ void write_transformed_pc(std::vector<cvo::CvoFrame::Ptr> &frames,
     Eigen::Matrix4f pose_f = pose.cast<float>();
     cvo::CvoPointCloud::transform(pose_f, *ptr->points, new_pc);
 
-    pcl::PointCloud<pcl::PointXYZRGB> pc_curr;
-    new_pc.export_to_pcd(pc_curr);
-
-    pc_all += pc_curr;
+    pc_all += new_pc;
   }
-  pcl::io::savePCDFileASCII(fname, pc_all);
+  pc_all.write_to_label_pcd(fname);
 }
 
 int main(int argc, char **argv) {
