@@ -1,8 +1,16 @@
 /media/sdg1/rzh/kitti/kitti/sequences/06/image_2
 
 # loop
+<<<<<<< HEAD
 05: 593-1350
 06: 0-836
 08: 762-1418
 # test frame
 05: 773-816
+=======
+05: 599-1345
+06: 0-836
+
+# test frame
+05: 773-816
+>>>>>>> update the loop clousure experiment
