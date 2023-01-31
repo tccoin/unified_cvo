@@ -149,12 +149,9 @@ int main(int argc, char **argv) {
   cvo::KittiHandler kitti(argv[1], cvo::KittiHandler::DataType::STEREO);
   std::string cvo_param_file(argv[2]);
   std::string graph_file_name(argv[3]);
-  // int dataset_start = stoi(argv[4]);
-  // int dataset_end = stoi(argv[5]);
-  // int dataset_interval = stoi(argv[6]);
-  int dataset_start = 773;
-  int dataset_end = 816;
-  int dataset_interval = 10;
+  int dataset_start = stoi(argv[4]);
+  int dataset_end = stoi(argv[5]);
+  int dataset_interval = stoi(argv[6]);
 
   int total_iters = kitti.get_total_number();
   string calib_file;
