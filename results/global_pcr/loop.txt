@@ -1,0 +1,8 @@
+/media/sdg1/rzh/kitti/kitti/sequences/06/image_2
+
+# loop
+05: 599-1345
+06: 0-836
+
+# test frame
+05: 773-816
