@@ -1,0 +1,1 @@
+./build/bin/cvo_global_pcr /home/link/unified_cvo/test_data/kitti_05_sample /home/link/unified_cvo/cvo_params/cvo_intensity_params_irls_tartan.yaml /home/link/unified_cvo/results/cvo_intensity_img_gpu0_oct25_best/05.txt 773 816 10
