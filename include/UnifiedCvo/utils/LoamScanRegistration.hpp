@@ -338,8 +338,6 @@ bool pcl_val_isfinite(T x) {
   return std::isfinite(x);
 }
 
-}
-
 }  // namespace cvo
 
 #endif
