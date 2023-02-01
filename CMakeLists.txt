@@ -4,7 +4,6 @@ if (POLICY CMP0048)
   cmake_policy(SET CMP0048 NEW)
 endif (POLICY CMP0048)
 cmake_policy(SET CMP0060 NEW)
-
 project(${PROJECT_NAME} VERSION 0.1)
 set(${PROJECT_NAME}_VERSION 0.1)
 
@@ -26,12 +25,12 @@ endif()
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # Release Mode
-#set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_BUILD_TYPE Release)
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -O3 -msse  -msse2 -msse3 -msse4 -mavx2 -ftree-vectorize" )
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O3 -lmkl_intel_lp64 -lmkl_core -lmkl -liomp -msse  -msse2 -msse3 -msse4 -mavx2 -ftree-vectorize" )
 #set(CMAKE_BUILD_TYPE Debug)
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -g  -msse -msse2 -msse3 -msse4 -mavx2 -ftree-vectorize" )
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   -march=native" )
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   -march=native" )
 #set(BUILD_TYPE RelWithDebInfo)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

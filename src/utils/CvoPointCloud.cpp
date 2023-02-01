@@ -340,9 +340,8 @@ namespace cvo{
       for (int i = 0; i < output_uv.size(); i++) {
         edge_or_surface[i*2] = 0.9;
         edge_or_surface[i*2 +1]=0.1;
-        std::cout<<i<<", ";
       }
-      std::cout<<"\n"<<"finish dso sampling\n";
+      std::cout<<"finish dso sampling\n";
       
     }
     //******************************************/
@@ -1384,6 +1383,7 @@ namespace cvo{
   void CvoPointCloud::write_to_label_pcd(const std::string & name) const {
     if (num_classes_ < 1)
       return;
+
     
     pcl::PointCloud<pcl::PointXYZL> pc;
     for (int i = 0; i < num_points_; i++) {

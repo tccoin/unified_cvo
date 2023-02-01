@@ -242,6 +242,7 @@ int main(int argc, char **argv) {
         new pcl::PointCloud<pcl::PointXYZRGB>);
     pc_edge_raw->export_to_pcd<pcl::PointXYZRGB>(*raw_pcd_edge);
 
+
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr raw_pcd_surface(
         new pcl::PointCloud<pcl::PointXYZRGB>);
     pc_full->export_to_pcd<pcl::PointXYZRGB>(*raw_pcd_surface);
