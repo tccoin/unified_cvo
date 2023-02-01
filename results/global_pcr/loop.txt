@@ -3,11 +3,15 @@
 # loop
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f05f29e0ee4ad5f51e29c9231d644eb36e2c2a30
 05: 593-1350
 06: 0-836
 08: 762-1418
 # test frame
 05: 773-816
+<<<<<<< HEAD
 =======
 05: 599-1345
 =======
@@ -21,3 +25,5 @@
 >>>>>>> update the loop clousure experiment
 =======
 >>>>>>> update params
+=======
+>>>>>>> f05f29e0ee4ad5f51e29c9231d644eb36e2c2a30
