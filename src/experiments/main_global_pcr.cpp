@@ -152,6 +152,7 @@ int main(int argc, char **argv) {
   int dataset_start = stoi(argv[4]);
   int dataset_end = stoi(argv[5]);
   int dataset_interval = stoi(argv[6]);
+  bool use_semantic = stoi(argv[7]);
 
   int total_iters = kitti.get_total_number();
   string calib_file;
@@ -183,10 +184,15 @@ int main(int argc, char **argv) {
     kitti.set_start_index(curr_frame_id);
     std::cout << "curr_frame_id: " << curr_frame_id << std::endl;
     cv::Mat left, right;
-    // vector<float> semantics_target;
-    // if (kitti.read_next_stereo(left, right, 19, semantics_target) != 0) {
-    if (kitti.read_next_stereo(left, right) != 0) {
-      break;
+    vector<float> semantics_target;
+    if (use_semantic) {
+      if (kitti.read_next_stereo(left, right, 19, semantics_target) != 0) {
+        break;
+      }
+    } else {
+      if (kitti.read_next_stereo(left, right) != 0) {
+        break;
+      }
     }
     // auto & gt_p
     /// tracking_subset_poses_f << gt_p(0,0) << " "<< gt_p(0,1) << " "<<
@@ -194,7 +200,12 @@ int main(int argc, char **argv) {
     /// "<< gt_p(1,2) << " "<< gt_p(1,3) << " "<< gt_p(2,0) << " "<< gt_p(2,1)
     /// << " "<< gt_p(2,2) << " "<< gt_p(2,3) << "\n";
 
-    std::shared_ptr<cvo::ImageStereo> raw(new cvo::ImageStereo(left, right));
+    std::shared_ptr<cvo::ImageStereo> raw;
+    if (use_semantic) {
+      raw.reset(new cvo::ImageStereo(left, right, 19, semantics_target));
+    } else {
+      raw.reset(new cvo::ImageStereo(left, right));
+    }
     std::shared_ptr<cvo::CvoPointCloud> pc_full(
         new cvo::CvoPointCloud(*raw, calib, cvo::CvoPointCloud::FULL));
     std::shared_ptr<cvo::CvoPointCloud> pc_edge_raw(
