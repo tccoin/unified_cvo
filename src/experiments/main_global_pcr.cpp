@@ -208,9 +208,9 @@ int main(int argc, char **argv) {
   while (!loop_closure_file.eof()) {
     int index0, index1;
     loop_closure_file >> index0 >> index1;
-    loop_closure_edges.insert({index0, index1});
+    loop_closure_edges.insert({index1, index0});
   }
-  std::cout << "Loaded " << loop_closure_edges.size() << "loop closure edges."
+  std::cout << "Loaded " << loop_closure_edges.size() << " loop closure edges."
             << std::endl;
 
   // read point cloud
@@ -426,7 +426,7 @@ int main(int argc, char **argv) {
   }
 
   // add loop closing
-  for (auto [id0, id1] : loop_closure_edges) {
+  for (auto [id1, id0] : loop_closure_edges) {
     std::pair<cvo::CvoFrame::Ptr, cvo::CvoFrame::Ptr> p(
         frames[id_to_index[id0]], frames[id_to_index[id1]]);
     edges.push_back(p);
@@ -437,7 +437,7 @@ int main(int argc, char **argv) {
         cvo_align.get_params_gpu(), params.multiframe_num_neighbors,
         params.multiframe_ell_init * 3));
     edge_states.push_back((edge_state));
-    std::cout << "Added loop closure edge " << id0 << " -> " << id1
+    std::cout << "Added loop closure edge " << id1 << " -> " << id0
               << std::endl;
   }
 
