@@ -153,9 +153,9 @@ void write_transformed_pc(std::vector<cvo::CvoFrame::Ptr> &frames,
     Eigen::Matrix4f pose_f = pose.cast<float>();
     cvo::CvoPointCloud::transform(pose_f, *ptr->points, new_pc);
 
-    std::cout << "new_pc feature_dimensions: " << new_pc.feature_dimensions()
-              << std::endl;
-    std::cout << "new_pc num_classes: " << new_pc.num_classes() << std::endl;
+    // std::cout << "new_pc feature_dimensions: " << new_pc.feature_dimensions()
+    //           << std::endl;
+    // std::cout << "new_pc num_classes: " << new_pc.num_classes() << std::endl;
 
     if (first_pc) {
       pc_all = new_pc;
@@ -258,11 +258,13 @@ int main(int argc, char **argv) {
         new pcl::PointCloud<pcl::PointXYZRGB>);
     pc_full->export_to_pcd<pcl::PointXYZRGB>(*raw_pcd_surface);
 
-    if (pc_full->num_classes() < 1) {
-      pc_full->write_to_color_pcd(std::to_string(curr_frame_id) + "_full.pcd");
-    } else {
-      pc_full->write_to_label_pcd(std::to_string(curr_frame_id) + "_full.pcd");
-    }
+    // if (pc_full->num_classes() < 1) {
+    //   pc_full->write_to_color_pcd(std::to_string(curr_frame_id) +
+    //   "_full.pcd");
+    // } else {
+    //   pc_full->write_to_label_pcd(std::to_string(curr_frame_id) +
+    //   "_full.pcd");
+    // }
 
     pcl::PointCloud<pcl::PointXYZRGB> edge_pcl;
     pcl::PointCloud<pcl::PointXYZRGB> surface_pcl;
@@ -317,11 +319,11 @@ int main(int argc, char **argv) {
     std::shared_ptr<cvo::CvoPointCloud> pc(new cvo::CvoPointCloud);
     *pc = *pc_edge + *pc_surface;
 
-    if (pc->num_classes() < 1) {
-      pc->write_to_color_pcd(std::to_string(curr_frame_id) + ".pcd");
-    } else {
-      pc->write_to_label_pcd(std::to_string(curr_frame_id) + ".pcd");
-    }
+    // if (pc->num_classes() < 1) {
+    //   pc->write_to_color_pcd(std::to_string(curr_frame_id) + ".pcd");
+    // } else {
+    //   pc->write_to_label_pcd(std::to_string(curr_frame_id) + ".pcd");
+    // }
 
     std::cout << "Voxel number points is " << pc->num_points() << std::endl;
 
@@ -356,8 +358,8 @@ int main(int argc, char **argv) {
   }
   std::string f_name("before_BA.pcd");
   write_transformed_pc(frames, f_name);
-  f_name = "before_BA_full.pcd";
-  write_transformed_pc(frames_full, f_name);
+  // f_name = "before_BA_full.pcd";
+  // write_transformed_pc(frames_full, f_name);
   std::string tracking_subset_poses_fname("cvo_track_poses.txt");
   write_traj_file(tracking_subset_poses_fname, frames);
 
@@ -457,7 +459,7 @@ int main(int argc, char **argv) {
   for (int i = 0; i < frames.size(); i++) {
     memcpy(frames_full[i]->pose_vec, frames[i]->pose_vec, sizeof(double) * 12);
   }
-  write_transformed_pc(frames_full, f_name_full);
+  // write_transformed_pc(frames_full, f_name_full);
   write_transformed_pc(frames, f_name);
 
   std::string traj_out("traj_out.txt");
