@@ -202,7 +202,7 @@ int main(int argc, char **argv) {
   std::cout << std::endl;
   read_graph_file(graph_file_name, frame_inds, edge_inds, BA_poses);
 
-  std::cout << "loading loop closure results" < std::endl;
+  std::cout << "loading loop closure results" << std::endl;
   std::unordered_map<int, int> loop_closure_edges;
   std::ifstream loop_closure_file(loop_closure_file_name);
   while (!loop_closure_file.eof()) {
