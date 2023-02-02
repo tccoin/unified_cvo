@@ -181,6 +181,7 @@ int main(int argc, char **argv) {
   int dataset_end = stoi(argv[5]);
   int dataset_interval = stoi(argv[6]);
   bool use_semantic = stoi(argv[7]);
+  std::string loop_closure_file_name(argv[8]);
 
   int total_iters = kitti.get_total_number();
   string calib_file;
@@ -200,6 +201,15 @@ int main(int argc, char **argv) {
   }
   std::cout << std::endl;
   read_graph_file(graph_file_name, frame_inds, edge_inds, BA_poses);
+
+  std::cout << "loading loop closure results" < std::endl;
+  std::unordered_map<int, int> loop_closure_edges;
+  std::ifstream loop_closure_file(loop_closure_file_name);
+  while (!loop_closure_file.eof()) {
+    int index0, index1;
+    loop_closure_file >> index0 >> index1;
+    loop_closure_edges.insert({index0, index1});
+  }
 
   // read point cloud
   std::vector<cvo::CvoFrame::Ptr> frames;
@@ -241,7 +251,6 @@ int main(int argc, char **argv) {
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr raw_pcd_edge(
         new pcl::PointCloud<pcl::PointXYZRGB>);
     pc_edge_raw->export_to_pcd<pcl::PointXYZRGB>(*raw_pcd_edge);
-
 
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr raw_pcd_surface(
         new pcl::PointCloud<pcl::PointXYZRGB>);
@@ -415,16 +424,19 @@ int main(int argc, char **argv) {
   }
 
   // add loop closing
-  std::pair<cvo::CvoFrame::Ptr, cvo::CvoFrame::Ptr> p(frames.front(),
-                                                      frames.back());
-  edges.push_back(p);
-  const cvo::CvoParams &params = cvo_align.get_params();
-  cvo::BinaryStateGPU::Ptr edge_state(new cvo::BinaryStateGPU(
-      std::dynamic_pointer_cast<cvo::CvoFrameGPU>(frames.front()),
-      std::dynamic_pointer_cast<cvo::CvoFrameGPU>(frames.back()), &params,
-      cvo_align.get_params_gpu(), params.multiframe_num_neighbors,
-      params.multiframe_ell_init * 3));
-  edge_states.push_back((edge_state));
+
+  for (auto [id0, id1] : loop_closure_edges) {
+    std::pair<cvo::CvoFrame::Ptr, cvo::CvoFrame::Ptr> p(
+        frames[id_to_index[id0]], frames[id_to_index[id1]]);
+    edges.push_back(p);
+    const cvo::CvoParams &params = cvo_align.get_params();
+    cvo::BinaryStateGPU::Ptr edge_state(new cvo::BinaryStateGPU(
+        std::dynamic_pointer_cast<cvo::CvoFrameGPU>(frames.front()),
+        std::dynamic_pointer_cast<cvo::CvoFrameGPU>(frames.back()), &params,
+        cvo_align.get_params_gpu(), params.multiframe_num_neighbors,
+        params.multiframe_ell_init * 3));
+    edge_states.push_back((edge_state));
+  }
 
   double time = 0;
   std::vector<bool> const_flags(frames.size(), false);
