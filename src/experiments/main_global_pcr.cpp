@@ -427,6 +427,10 @@ int main(int argc, char **argv) {
 
   // add loop closing
   for (auto [id1, id0] : loop_closure_edges) {
+    if (id_to_index.find(id0) == id_to_index.end() ||
+        id_to_index.find(id1) == id_to_index.end()) {
+      continue;
+    }
     std::pair<cvo::CvoFrame::Ptr, cvo::CvoFrame::Ptr> p(
         frames[id_to_index[id0]], frames[id_to_index[id1]]);
     edges.push_back(p);
