@@ -44,6 +44,11 @@ void read_graph_file(
     std::vector<std::pair<int, int>> &edges,
     std::vector<cvo::Mat34d_row, Eigen::aligned_allocator<cvo::Mat34d_row>>
         &poses_all) {
+  // remove duplicates
+  sort(frame_inds.begin(), frame_inds.end());
+  frame_inds.erase(unique(frame_inds.begin(), frame_inds.end()),
+                   frame_inds.end());
+  // load poses
   std::ifstream graph_file(graph_file_path);
   std::queue<long int, std::deque<long int>> frame_inds_q(
       std::deque<long int>(frame_inds.begin(), frame_inds.end()));
@@ -67,7 +72,7 @@ void read_graph_file(
       poses_all[frame_index] << pose_vec[0], pose_vec[1], pose_vec[2],
           pose_vec[3], pose_vec[4], pose_vec[5], pose_vec[6], pose_vec[7],
           pose_vec[8], pose_vec[9], pose_vec[10], pose_vec[11];
-      std::cout << "read pose[" << frame_index << "] as \n"
+      std::cout << "read pose[" << curr_frame << "] as \n"
                 << poses_all[frame_index] << "\n";
       // prepare for next frame
       frame_index++;
@@ -75,7 +80,11 @@ void read_graph_file(
   }
   // add edges
   for (int i = 1; i < frame_inds.size(); i++) {
-    edges.push_back({frame_inds[i - 1], frame_inds[i]});
+    if (frame_inds[i] - frame_inds[i - 1] < 10) {
+      edges.push_back({frame_inds[i - 1], frame_inds[i]});
+      std::cout << "Added edge: " << frame_inds[i - 1] << "->" << frame_inds[i]
+                << "\n";
+    }
   }
 
   graph_file.close();
@@ -177,7 +186,8 @@ int main(int argc, char **argv) {
   cvo::KittiHandler kitti(argv[1], cvo::KittiHandler::DataType::STEREO);
   std::string cvo_param_file(argv[2]);
   std::string graph_file_name(argv[3]);
-  int dataset_start = stoi(argv[4]);
+  int dataset_seq_n = stoi(argv[4]);
+  // int dataset_start = stoi(argv[4]);
   int dataset_end = stoi(argv[5]);
   int dataset_interval = stoi(argv[6]);
   bool use_semantic = stoi(argv[7]);
@@ -190,10 +200,28 @@ int main(int argc, char **argv) {
 
   cvo::CvoGPU cvo_align(cvo_param_file);
 
-  std::vector<int> frame_inds{593, 1350, 596, 1353, 599, 1356, 602, 1359,
-                              605, 1362, 608, 1365, 611, 1368, 614, 1371,
-                              617, 1374, 620, 1377, 623, 1380, 626, 1383,
-                              629, 1386, 632, 1389, 638, 1392};
+  std::vector<int> loop_start_inds{
+      593, 596, 599, 602, 605, 608, 611, 614, 617, 620, 623, 626, 629, 632,
+      638, 638, 644, 647, 650, 653, 656, 659, 662, 665, 671, 671, 677, 680,
+      683, 686, 689, 692, 695, 698, 704, 707, 710, 713, 716, 719, 722, 728,
+      731, 734, 737, 740, 743, 746, 752, 755, 758, 761, 761, 764, 773};
+  std::vector<int> loop_end_inds{
+      1350, 1353, 1356, 1359, 1362, 1365, 1368, 1371, 1374, 1377, 1380,
+      1383, 1386, 1389, 1392, 1395, 1398, 1401, 1404, 1407, 1410, 1413,
+      1416, 1419, 1422, 1425, 1428, 1431, 1434, 1437, 1440, 1443, 1446,
+      1449, 1452, 1455, 1458, 1461, 1464, 1467, 1470, 1473, 1476, 1479,
+      1482, 1485, 1488, 1491, 1494, 1497, 1500, 1503, 1506, 1509, 1512};
+
+  std::vector<int> frame_inds;
+  for (int i = 0; i < dataset_seq_n / 2; i++) {
+    frame_inds.push_back(loop_start_inds[i]);
+    cout << "Added frame " << loop_start_inds[i] << std::endl;
+  }
+  for (int i = 0; i < dataset_seq_n / 2; i++) {
+    frame_inds.push_back(loop_end_inds[i]);
+    cout << "Added frame " << loop_end_inds[i] << std::endl;
+  }
+
   std::vector<std::pair<int, int>> edge_inds;
   std::vector<cvo::Mat34d_row, Eigen::aligned_allocator<cvo::Mat34d_row>>
       BA_poses;
@@ -446,9 +474,9 @@ int main(int argc, char **argv) {
         std::dynamic_pointer_cast<cvo::CvoFrameGPU>(frames.front()),
         std::dynamic_pointer_cast<cvo::CvoFrameGPU>(frames.back()), &params,
         cvo_align.get_params_gpu(), params.multiframe_num_neighbors,
-        params.multiframe_ell_init * 5));
+        params.multiframe_ell_init * 10));
     edge_states.push_back((edge_state));
-    std::cout << "Added loop closure edge " << id1 << " -> " << id0
+    std::cout << "Added loop closure edge " << id0 << " -> " << id1
               << std::endl;
   }
 
