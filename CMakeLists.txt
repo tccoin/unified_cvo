@@ -745,6 +745,14 @@ if (${PROJECT_NAME}_ENABLE_QT_VIEWER)
     $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include/${PROJECT_NAME}-${${PROJECT_NAME}_VERSION}> )
   target_link_libraries(stack_pcd_viewer cvo_utils_lib boost_filesystem boost_system  pcl_common pcl_io pcl_visualization  pcd_qt_viewer_lib )
 
+  add_executable(stack_pcd_viewer_offline ${PROJECT_SOURCE_DIR}/src/experiments/main_stack_pcd_viewer_offline.cpp)
+  target_include_directories(stack_pcd_viewer_offline PUBLIC
+    #$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}> 
+    # $<BUILD_INTERFACE:${UnifiedCvo_BINARY_DIR}/include>
+    $<BUILD_INTERFACE:${CVO_INCLUDE_DIRS}>               
+    $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include/${PROJECT_NAME}-${${PROJECT_NAME}_VERSION}> )
+  target_link_libraries(stack_pcd_viewer_offline cvo_gpu_img_lib cvo_cpu_lib cvo_utils_lib boost_filesystem boost_system pcl_common pcl_io pcl_visualization  pcd_qt_viewer_lib tartan tum)
+
   add_executable(ellipse_viewer ${PROJECT_SOURCE_DIR}/src/experiments/main_ellipse_viewer.cpp)
   target_compile_definitions(ellipse_viewer PRIVATE -DNUM_CLASSES=19 -DFEATURE_DIMENSIONS=5)
   target_include_directories(ellipse_viewer PUBLIC
@@ -752,7 +760,7 @@ if (${PROJECT_NAME}_ENABLE_QT_VIEWER)
     #$<BUILD_INTERFACE:${UnifiedCvo_BINARY_DIR}/include>
     "$<BUILD_INTERFACE:${CVO_INCLUDE_DIRS}>"                
     $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include/${PROJECT_NAME}-${${PROJECT_NAME}_VERSION}> )
-  target_link_libraries(ellipse_viewer cvo_gpu_img_lib cvo_utils_lib boost_filesystem boost_system  pcl_common pcl_io pcl_visualization  pcd_qt_viewer_lib  kitti)
+  target_link_libraries(ellipse_viewer cvo_gpu_img_lib cvo_utils_lib boost_filesystem boost_system pcl_common pcl_io pcl_visualization  pcd_qt_viewer_lib  kitti)
   
   
 endif()

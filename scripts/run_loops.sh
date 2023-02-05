@@ -1,0 +1,1 @@
+bash scripts/run_loop.sh 8
