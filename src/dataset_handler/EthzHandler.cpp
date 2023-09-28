@@ -22,6 +22,11 @@ namespace cvo
         curr_index = 0;
         string name_prefix;
         this->dataset_folder = dataset_folder;
+        // if last char is '/', remove it
+        if (dataset_folder.back() == '/')
+        {
+            dataset_folder.pop_back();
+        }
         if (frame_type == FrameType::LOCAL)
         {
             data_folder = dataset_folder + "/local_frame/";
