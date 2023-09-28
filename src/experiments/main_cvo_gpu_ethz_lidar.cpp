@@ -30,9 +30,18 @@ int main(int argc, char *argv[])
     pcl::visualization::PCLVisualizer viewer("PCL Viewer");
 
     // stack the global point cloud
-
     pcl::PointCloud<pcl::PointXYZI>::Ptr pc_stacked(new pcl::PointCloud<pcl::PointXYZI>);
-    int n = 3; // dataset_global.get_total_number()
+
+    // create a folder to save pcd
+    std::string pcd_folder_path = dataset_folder + "local_frame_pcd/";
+    boost::filesystem::path pcd_dir(pcd_folder_path.c_str());
+    if (boost::filesystem::exists(pcd_dir))
+    {
+        boost::filesystem::remove_all(pcd_dir);
+    }
+    boost::filesystem::create_directory(pcd_dir);
+
+    int n = dataset_global.get_total_number(); // dataset_global.get_total_number()
     for (int i = 0; i < n; i++)
     {
         pcl::PointCloud<pcl::PointXYZI>::Ptr pc(new pcl::PointCloud<pcl::PointXYZI>);
@@ -40,6 +49,15 @@ int main(int argc, char *argv[])
         pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZI> rgb(pc, rand() % 255, rand() % 255, rand() % 255);
         viewer.addPointCloud<pcl::PointXYZI>(pc, rgb, "frame" + to_string(i) + "_global");
         dataset_global.next_frame_index();
+
+        // save the pc
+        std::string filename = to_string(i);
+        while (filename.size() < 6)
+        {
+            filename = "0" + filename;
+        }
+        filename += ".pcd";
+        pcl::io::savePCDFileASCII(pcd_folder_path + filename, *pc);
 
         // stack the pc
         *pc_stacked += *pc;
